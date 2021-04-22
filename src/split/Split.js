@@ -2,20 +2,20 @@ import React from 'react';
 import RecorderView from "../recorder/Recorder";
 import './Split.css';
 import {
-    AppBar,
     Button,
     Card,
     CardContent,
     CardHeader,
-    Container, CssBaseline,
-    Grid, Link,
-    Toolbar,
-    Typography, withStyles
+    Container,
+    CssBaseline,
+    Grid,
+    Typography,
+    withStyles
 } from "@material-ui/core";
-import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import axios from 'axios';
+import ResultDialog from "../dialog/Dialog";
 
 const styles = theme => ({
     icon: {
@@ -68,19 +68,19 @@ class SplitView extends React.Component {
     }
 
     updateBlob(recorderId, blob) {
+        console.log('Update blobs:', blob);
         let newBlobs = this.state.blobs;
-        newBlobs[recorderId - 1] = blob;
+        newBlobs[recorderId - 1] = blob.blob;
         this.setState({
             blobs: newBlobs
         });
-        console.log(this.state);
     }
 
-    uploadMedia() {
+    uploadMedia(callback) {
         console.log('Upload media');
         const form = new FormData();
-        form.append('files', new Blob([this.state.blobs[0]], {type: "audio/wav"}), 'first_audio.wav');
-        form.append('files', new Blob([this.state.blobs[1]], {type: "audio/wav"}), 'second_audio.wav');
+        form.append('files', this.state.blobs[0], 'first_audio.wav');
+        form.append('files', this.state.blobs[1], 'second_audio.wav');
         axios.post('http://localhost:8000/comparespeaker/', form,
             {
                 headers: {
@@ -90,8 +90,9 @@ class SplitView extends React.Component {
                     'Content-Type': 'multipart/form-data'
                 }
             }
-        ).then(() => {
-            console.log('POST request done');
+        ).then(response => {
+            console.log('Result:', response['data']['same_speaker_probability']);
+            callback(response['data']['same_speaker_probability']);
         });
     }
 
@@ -101,34 +102,26 @@ class SplitView extends React.Component {
         return (
             <>
                 <CssBaseline/>
-                {/*<AppBar position="relative">*/}
-                {/*    <Toolbar>*/}
-                {/*        <HomeIcon className={classes.icon} fontSize='large'/>*/}
-                {/*        <Typography variant="h4" color="inherit">*/}
-                {/*            <b>Voice recognition</b>*/}
-                {/*        </Typography>*/}
-                {/*    </Toolbar>*/}
-                {/*</AppBar>*/}
                 <div className={classes.heroContent}>
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
                             <b>Voice recognition</b>
                         </Typography>
                         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                            Given two speaker's audio, determine those audio are from a same person or not.
+                            Given audio of two speakers, determine those audio are from a same person or not.
                         </Typography>
                         <div className={classes.heroButtons}>
                             <Grid container spacing={2} justify="center">
                                 <Grid item>
                                     <Button variant="contained" color="primary"
                                             onClick={() => window.open("https://github.com/NewLuminous/voice-recognition", "_blank")}>
-                                        Github's repo
+                                        <b>Our Github repo</b>
                                     </Button>
                                 </Grid>
                                 <Grid item>
                                     <Button variant="outlined" color="primary"
                                             onClick={() => window.open("https://github.com/NewLuminous/voice-recognition/blob/master/README.md", "_blank")}>
-                                        About contributors
+                                        <b>About contributors</b>
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -161,10 +154,15 @@ class SplitView extends React.Component {
                         </Grid>
                     </Grid>
                     <div className='upload-button'>
+                        <ResultDialog onRef={ref => (this.child = ref)}/>
                         <Button variant="contained"
                                 startIcon={<CompareIcon/>}
                                 style={{backgroundColor: "#5cb85c", color: "white"}}
-                                onClick={() => this.uploadMedia()}><b>COMPARE</b></Button>
+                                onClick={() => {
+                                    this.uploadMedia(this.child.onOpen);
+                                }}>
+                            <b>COMPARE</b>
+                        </Button>
                     </div>
                 </Container>
                 <footer className={classes.footer}>
