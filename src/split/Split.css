@@ -1,0 +1,16 @@
+.MuiGrid-grid-xs-true {
+    padding: 5px;
+}
+
+.MuiCard-root {
+    border-style: solid;
+    /*border-radius: 10px;*/
+    /*height: 180px;*/
+}
+
+.upload-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
