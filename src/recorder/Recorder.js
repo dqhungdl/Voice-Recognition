@@ -121,6 +121,7 @@ class RecorderView extends React.Component {
                         {
                             this.state.showRecorder &&
                             <AudioReactRecorder state={this.state.recorderState.recordState}
+                                                backgroundColor={this.props.backgroundColor}
                                                 onStop={(audioData) => {
                                                     this.setState({
                                                         blob: audioData
@@ -141,7 +142,7 @@ class RecorderView extends React.Component {
                         }
                         {
                             this.state.showAudio &&
-                            <div className='recorder-item recorder-player'>
+                            <div className='recorder-item recorder-player' style={{paddingBottom: 10}}>
                                 <ThemeProvider theme={this.muiTheme}>
                                     <AudioPlayer
                                         elevation={1}
