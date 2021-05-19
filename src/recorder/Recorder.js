@@ -155,7 +155,7 @@ class RecorderView extends React.Component {
                                         preload="auto"
                                         src={this.state.blob == null ? null : this.state.blob.url}
                                     />
-                                </ThemeProvider>;
+                                </ThemeProvider>
                             </div>
                         }
                         {
@@ -167,7 +167,7 @@ class RecorderView extends React.Component {
                                         onClick={() => {
                                             start();
                                             this.startRecording();
-                                        }}><b>RECORD</b></Button>
+                                        }}><b>Ghi âm</b></Button>
                             </div>
                         }
                         {
@@ -179,7 +179,7 @@ class RecorderView extends React.Component {
                                         onClick={() => {
                                             pause();
                                             this.pauseRecording();
-                                        }}><b>PAUSE</b></Button>
+                                        }}><b>Tạm dừng</b></Button>
                             </div>
                         }
                         <span className='recorder-item'>
@@ -191,7 +191,7 @@ class RecorderView extends React.Component {
                                             onClick={() => {
                                                 resume();
                                                 this.resumeRecording();
-                                            }}><b>RESUME</b></Button>
+                                            }}><b>Tiếp tục</b></Button>
                                 }{
                             this.state.showStopButton &&
                             <Button
@@ -201,7 +201,7 @@ class RecorderView extends React.Component {
                                 onClick={() => {
                                     stop();
                                     this.stopRecording();
-                                }}><b>PREVIEW</b></Button>
+                                }}><b>Hoàn thành</b></Button>
                         }</span>
                         {
                             this.state.showResetButton &&
@@ -213,7 +213,7 @@ class RecorderView extends React.Component {
                                             abortController.abort();
                                             reset();
                                             this.deleteRecording();
-                                        }}><b>DELETE</b></Button>
+                                        }}><b>Xóa</b></Button>
                             </div>
                         }
                     </div>
